@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="main.css">
+  </head>
+
+<body>
+  <div id="popup-content">
+    <div id="popup-data">
+      <table style="width: 100%;" id="main-table">
+          <tbody>
+              <tr>
+                  <td>Today's left:</td>
+                  <td id="today-data-left">...</td>
+                  <td><progress max="100" value="0"></progress></td>
+              </tr>
+              <tr>
+                  <td>Month's left:</td>
+                  <td id="month-data-left">...</td>
+                  <td><progress id="month-data-left-progress" max="100" value="0"></progress></td>
+              </tr>
+              <tr>
+                <td colspan="3"><center>Evenly scheduled:</center></td>
+              </tr>
+          </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="main.js"></script>
+</body>
+
+</html>

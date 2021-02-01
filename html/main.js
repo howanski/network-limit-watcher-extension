@@ -1,6 +1,5 @@
 (function() {
-  // TODO: use let not var, make peace not war
-    var mainInfo = {
+    let mainInfo = {
       "currentMonthMovementInBytes": 0,
       "monthlyDataCapInBytes": 0,
       "startOfMonthDay": 1
@@ -16,28 +15,28 @@
 
     function updateInterface(){
       if (mainInfo.currentMonthMovementInBytes > 0 & mainInfo.monthlyDataCapInBytes >0){
-        var jackpot = mainInfo.monthlyDataCapInBytes;
-        var hand = mainInfo.currentMonthMovementInBytes;
-        var bytesLeftThisMonth = jackpot - hand;
-        var gigaBytesLeftThisMonth = bytesToGigaBytes(bytesLeftThisMonth);
+        let jackpot = mainInfo.monthlyDataCapInBytes;
+        let hand = mainInfo.currentMonthMovementInBytes;
+        let bytesLeftThisMonth = jackpot - hand;
+        let gigaBytesLeftThisMonth = bytesToGigaBytes(bytesLeftThisMonth);
         
-        readableMonthLeftElem = document.getElementById('month-data-left');
+        let readableMonthLeftElem = document.getElementById('month-data-left');
         readableMonthLeftElem.innerHTML = gigaBytesLeftThisMonth + " GB";
 
-        readableMonthLeftProgressElem = document.getElementById('month-data-left-progress');
+        let readableMonthLeftProgressElem = document.getElementById('month-data-left-progress');
         readableMonthLeftProgressElem.setAttribute('max', jackpot);
         readableMonthLeftProgressElem.setAttribute('value', bytesLeftThisMonth);
 
         // date magic, don't read code while sober
-        var today = new Date();
+        let today = new Date();
         
 
-        var currentDayOfMonth = today.getDate();
-        var currentMonth = today.getMonth(); // [0-11]
-        var currentYear = today.getFullYear();
+        let currentDayOfMonth = today.getDate();
+        let currentMonth = today.getMonth(); // [0-11]
+        let currentYear = today.getFullYear();
 
         if (mainInfo.startOfMonthDay <= currentDayOfMonth){ // month's not over
-          timeOfStart = new Date(currentYear, currentMonth, mainInfo.startOfMonthDay);
+          let timeOfStart = new Date(currentYear, currentMonth, mainInfo.startOfMonthDay);
           if (currentMonth != 11){
             timeOfEnd = new Date(currentYear, currentMonth + 1, mainInfo.startOfMonthDay);
           } else {
@@ -52,24 +51,24 @@
           timeOfEnd = new Date(currentYear, currentMonth, mainInfo.startOfMonthDay);        
         }
 
-        var thisMonthLengthInMiliseconds = timeOfEnd - timeOfStart;
-        var thisMonthLengthInDays = milisecondsToFullDays(thisMonthLengthInMiliseconds);
-        var dailyConsumableBytes = mainInfo.monthlyDataCapInBytes / thisMonthLengthInDays;
-        var virtualBytesToConsume = mainInfo.monthlyDataCapInBytes;
-        tosEpoh = timeOfStart.getTime();
-        var crawledToToday = false;
-        var tableElem = document.getElementById('main-table');
+        let thisMonthLengthInMiliseconds = timeOfEnd - timeOfStart;
+        let thisMonthLengthInDays = milisecondsToFullDays(thisMonthLengthInMiliseconds);
+        let dailyConsumableBytes = mainInfo.monthlyDataCapInBytes / thisMonthLengthInDays;
+        let virtualBytesToConsume = mainInfo.monthlyDataCapInBytes;
+        let tosEpoh = timeOfStart.getTime();
+        let crawledToToday = false;
+        let tableElem = document.getElementById('main-table');
         for (i=0; i<thisMonthLengthInDays; i++){ //iterating through days of current month
           virtualBytesToConsume -= dailyConsumableBytes;
-          virtualDate = new Date(tosEpoh + i*24*60*60*1000);
+          let virtualDate = new Date(tosEpoh + i*24*60*60*1000);
           if (virtualDate.getDate() == currentDayOfMonth && virtualDate.getMonth() == currentMonth){
             crawledToToday = true;
-            var todaysFood = bytesLeftThisMonth - virtualBytesToConsume;
-            readableTodayLeftElem = document.getElementById('today-data-left');
+            let todaysFood = bytesLeftThisMonth - virtualBytesToConsume;
+            let readableTodayLeftElem = document.getElementById('today-data-left');
             readableTodayLeftElem.innerHTML = bytesToGigaBytes(todaysFood) + " GB";
           }
 
-          if (crawledToToday){
+          if (crawledToToday){ // Print schedule for rest of the month
             let newRow = tableElem.insertRow(-1);
 
             let newCell = newRow.insertCell(0);
@@ -80,12 +79,11 @@
             let newText2 = document.createTextNode(bytesToGigaBytes(virtualBytesToConsume) + " GB");
             newCell2.appendChild(newText2);
 
-            let newCell3 = newRow.insertCell(2);
-            let newText3 = document.createElement('progress');
-            newText3.setAttribute("max", mainInfo.monthlyDataCapInBytes);
-            newText3.setAttribute("value", virtualBytesToConsume);
-            newCell3.appendChild(newText3);
-            
+            let progressCell = newRow.insertCell(2);
+            let progressElem = document.createElement('progress');
+            progressElem.setAttribute("max", mainInfo.monthlyDataCapInBytes);
+            progressElem.setAttribute("value", virtualBytesToConsume);
+            progressCell.appendChild(progressElem);
           }
         }
 
@@ -93,16 +91,16 @@
     }
     
     function loadCurrentMonthData(){
-      var httpRequest = new XMLHttpRequest();
+      let httpRequest = new XMLHttpRequest();
       httpRequest.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-          responseData = this.responseXML.firstChild;
-          responseDataVars = responseData.children;
+          let responseData = this.responseXML.firstChild;
+          let responseDataVars = responseData.children;
           mainInfo.currentMonthMovementInBytes = 0;
             for (i = 0; i < responseDataVars.length; i++) {
-              var currNode = responseDataVars[i]; 
-              var tagName = currNode.tagName;
-              var nodeValue = currNode.innerHTML;
+              let currNode = responseDataVars[i]; 
+              let tagName = currNode.tagName;
+              let nodeValue = currNode.innerHTML;
               if (tagName == "CurrentMonthDownload") {
                 mainInfo.currentMonthMovementInBytes += parseInt(nodeValue);
               }
@@ -119,15 +117,15 @@
     }
 
     function loadOverallData(){
-      var httpRequest = new XMLHttpRequest();
+      let httpRequest = new XMLHttpRequest();
       httpRequest.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           responseData = this.responseXML.firstChild;
           responseDataVars = responseData.children;
             for (i = 0; i < responseDataVars.length; i++) {
-              var currNode = responseDataVars[i]; 
-              var tagName = currNode.tagName;
-              var nodeValue = currNode.innerHTML;
+              let currNode = responseDataVars[i]; 
+              let tagName = currNode.tagName;
+              let nodeValue = currNode.innerHTML;
               if (tagName == "trafficmaxlimit") {
                 mainInfo.monthlyDataCapInBytes = parseInt(nodeValue);
               } else if (tagName == "StartDay") {

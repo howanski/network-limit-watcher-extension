@@ -1,32 +1,25 @@
 {
+  "manifest_version": 2,
+  "name": "Network Limit Watcher",
+  "version": "1.0",
 
-    "manifest_version": 2,
-    "name": "Network Limit Watcher",
-    "version": "1.0",
-  
-    "description": "Shows how much data limit left",
-    "homepage_url": "https://github.com/howanski/network-limit-watcher-extension",
-    "icons": {
-      "32": "icons/base_icon.svg",
-      "48": "icons/base_icon.svg",
-      "96": "icons/base_icon.svg"
-    },
-  
-    "permissions": [
-      "*://192.168.1.1/*"
-    ],
-  
-    "browser_action": {
-      "default_icon": "icons/base_icon.svg",
-      "default_title": "Network Limit Watcher",
-      "default_popup": "html/main.html"
-    },
-  
-    "background": {
-        "scripts": [
-            "bg-worker.js"
-        ]
-      }
-  
+  "description": "Shows how much data limit left",
+  "homepage_url": "https://github.com/howanski/network-limit-watcher-extension",
+  "icons": {
+    "32": "icons/base_icon.svg",
+    "48": "icons/base_icon.svg",
+    "96": "icons/base_icon.svg"
+  },
+
+  "permissions": ["*://192.168.1.1/*"],
+
+  "browser_action": {
+    "default_icon": "icons/base_icon.svg",
+    "default_title": "Network Limit Watcher",
+    "default_popup": "html/main.html"
+  },
+
+  "background": {
+    "scripts": ["bg-worker.js"]
   }
-  
+}

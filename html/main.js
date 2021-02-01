@@ -3,6 +3,12 @@
     currentMonthMovementInBytes: 0,
     monthlyDataCapInBytes: 0,
     startOfMonthDay: 1,
+    bytesLeftThisMonth: 0,
+    bytesLeftToday: 0,
+    dailyConsumableBytes: 0,
+    milisecondsLeftThisMonth: 0,
+    steadyTransferToEndOfMonthInKbps: 0,
+    healthySchedule: [],
   };
 
   function bytesToGigaBytes(bytes) {
@@ -20,61 +26,14 @@
     );
   }
 
-  function updateInterface() {
+  function recalculateStatistics() {
     if (isDataFetchedFromModem()) {
       let jackpot = mainInfo.monthlyDataCapInBytes;
       let hand = mainInfo.currentMonthMovementInBytes;
-      let bytesLeftThisMonth = jackpot - hand;
-      let gigaBytesLeftThisMonth = bytesToGigaBytes(bytesLeftThisMonth);
+      mainInfo.bytesLeftThisMonth =
+        mainInfo.monthlyDataCapInBytes - mainInfo.currentMonthMovementInBytes;
 
-      let readableMonthLeftElem = document.getElementById("month-data-left");
-      readableMonthLeftElem.innerHTML = gigaBytesLeftThisMonth + " GB";
-
-      let readableMonthLeftProgressElem = document.getElementById(
-        "month-data-left-progress"
-      );
-      readableMonthLeftProgressElem.setAttribute("max", jackpot);
-      readableMonthLeftProgressElem.setAttribute("value", bytesLeftThisMonth);
-
-      // date magic, don't read code while sober
-      let today = new Date();
-
-      let currentDayOfMonth = today.getDate();
-      let currentMonth = today.getMonth(); // [0-11]
-      let currentYear = today.getFullYear();
-
-      if (mainInfo.startOfMonthDay <= currentDayOfMonth) {
-        // month's not over
-        let timeOfStart = new Date(
-          currentYear,
-          currentMonth,
-          mainInfo.startOfMonthDay
-        );
-        if (currentMonth != 11) {
-          timeOfEnd = new Date(
-            currentYear,
-            currentMonth + 1,
-            mainInfo.startOfMonthDay
-          );
-        } else {
-          timeOfEnd = new Date(currentYear + 1, 0, mainInfo.startOfMonthDay);
-        }
-      } else {
-        if (currentMonth != 0) {
-          timeOfStart = new Date(
-            currentYear,
-            currentMonth - 1,
-            mainInfo.startOfMonthDay
-          );
-        } else {
-          timeOfStart = new Date(currentYear - 1, 11, mainInfo.startOfMonthDay);
-        }
-        timeOfEnd = new Date(
-          currentYear,
-          currentMonth,
-          mainInfo.startOfMonthDay
-        );
-      }
+      let [timeOfStart, timeOfEnd, nowExactly] = getCurrentMonthBorders();
 
       let thisMonthLengthInMiliseconds = timeOfEnd - timeOfStart;
       let thisMonthLengthInDays = milisecondsToFullDays(
@@ -82,54 +41,145 @@
       );
       let dailyConsumableBytes =
         mainInfo.monthlyDataCapInBytes / thisMonthLengthInDays;
+
       let virtualBytesToConsume = mainInfo.monthlyDataCapInBytes;
-      let tosEpoh = timeOfStart.getTime();
+
+      mainInfo.milisecondsLeftThisMonth =
+        timeOfEnd.getTime() - nowExactly.getTime();
+
+      mainInfo.steadyTransferToEndOfMonthInKbps = parseInt(
+        mainInfo.bytesLeftThisMonth /
+          1024 /
+          (mainInfo.milisecondsLeftThisMonth / 1000)
+      );
+
       let crawledToToday = false;
-      let tableElem = document.getElementById("main-table");
+      let tosEpoh = timeOfStart.getTime();
+      let healthySchedule = [];
       for (i = 0; i < thisMonthLengthInDays; i++) {
         //iterating through days of current month
         virtualBytesToConsume -= dailyConsumableBytes;
         let virtualDate = new Date(tosEpoh + i * 24 * 60 * 60 * 1000);
         if (
-          virtualDate.getDate() == currentDayOfMonth &&
-          virtualDate.getMonth() == currentMonth
+          virtualDate.getDate() == nowExactly.getDate() &&
+          virtualDate.getMonth() == nowExactly.getMonth()
         ) {
           crawledToToday = true;
-          let todaysFood = bytesLeftThisMonth - virtualBytesToConsume;
-          let readableTodayLeftElem = document.getElementById(
-            "today-data-left"
-          );
-          readableTodayLeftElem.innerHTML =
-            bytesToGigaBytes(todaysFood) + " GB";
+          mainInfo.bytesLeftToday =
+            mainInfo.bytesLeftThisMonth - virtualBytesToConsume;
         }
 
         if (crawledToToday) {
-          // Print schedule for rest of the month
-          let newRow = tableElem.insertRow(-1);
-
-          let newCell = newRow.insertCell(0);
-          let newText = document.createTextNode(
-            virtualDate.getDate() + "." + (virtualDate.getMonth() + 1)
-          );
-          newCell.appendChild(newText);
-
-          let newCell2 = newRow.insertCell(1);
-          let newText2 = document.createTextNode(
-            bytesToGigaBytes(virtualBytesToConsume) + " GB"
-          );
-          newCell2.appendChild(newText2);
-
-          let progressCell = newRow.insertCell(2);
-          let progressElem = document.createElement("progress");
-          progressElem.setAttribute("max", mainInfo.monthlyDataCapInBytes);
-          progressElem.setAttribute("value", virtualBytesToConsume);
-          progressCell.appendChild(progressElem);
+          healthySchedule[healthySchedule.length] = {
+            date: virtualDate,
+            transferLeftOnEod: virtualBytesToConsume,
+          };
         }
+      }
+      mainInfo.healthySchedule = healthySchedule;
+    }
+  }
+
+  function getCurrentMonthBorders() {
+    // date magic, don't read code while sober
+    let nowExactly = new Date();
+
+    let currentDayOfMonth = nowExactly.getDate();
+    let currentMonth = nowExactly.getMonth(); // [0-11]
+    let currentYear = nowExactly.getFullYear();
+
+    let timeOfStart = 0; // for destructor
+    let timeOfEnd = 0;
+
+    if (mainInfo.startOfMonthDay <= currentDayOfMonth) {
+      // between invoice day and last day of physical month
+      timeOfStart = new Date(
+        currentYear,
+        currentMonth,
+        mainInfo.startOfMonthDay
+      );
+      if (currentMonth != 11) {
+        timeOfEnd = new Date(
+          currentYear,
+          currentMonth + 1,
+          mainInfo.startOfMonthDay
+        );
+      } else {
+        timeOfEnd = new Date(currentYear + 1, 0, mainInfo.startOfMonthDay);
+      }
+    } else {
+      if (currentMonth != 0) {
+        timeOfStart = new Date(
+          currentYear,
+          currentMonth - 1,
+          mainInfo.startOfMonthDay
+        );
+      } else {
+        timeOfStart = new Date(currentYear - 1, 11, mainInfo.startOfMonthDay);
+      }
+      timeOfEnd = new Date(currentYear, currentMonth, mainInfo.startOfMonthDay);
+    }
+    return [timeOfStart, timeOfEnd, nowExactly];
+  }
+
+  function updatepopUpInterface() {
+    if (isDataFetchedFromModem()) {
+      recalculateStatistics();
+
+      let readableMonthLeftElem = document.getElementById("month-data-left");
+      readableMonthLeftElem.innerHTML =
+        bytesToGigaBytes(mainInfo.bytesLeftThisMonth) + " GB";
+
+      let readableMonthLeftProgressElem = document.getElementById(
+        "month-data-left-progress"
+      );
+      readableMonthLeftProgressElem.setAttribute(
+        "max",
+        mainInfo.monthlyDataCapInBytes
+      );
+      readableMonthLeftProgressElem.setAttribute(
+        "value",
+        mainInfo.bytesLeftThisMonth
+      );
+
+      let tableElem = document.getElementById("main-table");
+
+      let readableTodayLeftElem = document.getElementById("today-data-left");
+      readableTodayLeftElem.innerHTML =
+        bytesToGigaBytes(mainInfo.bytesLeftToday) + " GB";
+
+      for (i = 0; i < mainInfo.healthySchedule.length; i++) {
+        // Print schedule for rest of the month
+        let newRow = tableElem.insertRow(-1);
+
+        let newCell = newRow.insertCell(0);
+        let newText = document.createTextNode(
+          mainInfo.healthySchedule[i].date.getDate() +
+            "." +
+            (mainInfo.healthySchedule[i].date.getMonth() + 1)
+        );
+        newCell.appendChild(newText);
+
+        let newCell2 = newRow.insertCell(1);
+        let newText2 = document.createTextNode(
+          bytesToGigaBytes(mainInfo.healthySchedule[i].transferLeftOnEod) +
+            " GB"
+        );
+        newCell2.appendChild(newText2);
+
+        let progressCell = newRow.insertCell(2);
+        let progressElem = document.createElement("progress");
+        progressElem.setAttribute("max", mainInfo.monthlyDataCapInBytes);
+        progressElem.setAttribute(
+          "value",
+          mainInfo.healthySchedule[i].transferLeftOnEod
+        );
+        progressCell.appendChild(progressElem);
       }
     }
   }
 
-  function loadCurrentMonthData() {
+  function fetchCurrentMonthData() {
     let httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
@@ -146,7 +196,7 @@
             mainInfo.currentMonthMovementInBytes += parseInt(nodeValue);
           }
         }
-        updateInterface();
+        updatepopUpInterface();
       }
     };
     httpRequest.open(
@@ -158,7 +208,7 @@
     httpRequest.send();
   }
 
-  function loadOverallData() {
+  function fetchOverallData() {
     let httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
@@ -174,7 +224,7 @@
             mainInfo.startOfMonthDay = parseInt(nodeValue);
           }
         }
-        updateInterface();
+        updatepopUpInterface();
       }
     };
     httpRequest.open(
@@ -186,10 +236,14 @@
     httpRequest.send();
   }
 
+  function prepareViewData() {
+    fetchCurrentMonthData();
+    fetchOverallData();
+  }
+
   function fillPopupContent() {
-    loadCurrentMonthData();
-    loadOverallData();
-    updateInterface();
+    prepareViewData();
+    // updateInterface(); // well,that's asynchronous, so...
   }
   fillPopupContent();
 })();

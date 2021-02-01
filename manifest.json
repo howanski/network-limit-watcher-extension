@@ -7,16 +7,12 @@
     "description": "Shows how much data limit left",
     "homepage_url": "https://github.com/howanski/network-limit-watcher-extension",
     "icons": {
+      "32": "icons/base_icon.svg",
       "48": "icons/base_icon.svg",
       "96": "icons/base_icon.svg"
     },
   
     "permissions": [
-      "webRequest",
-      "notifications",
-      "idle",
-      "alarms",
-      "activeTab",
       "*://192.168.1.1/*"
     ],
   

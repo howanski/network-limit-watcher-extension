@@ -142,12 +142,17 @@
         mainInfo.bytesLeftThisMonth
       );
 
-      let tableElem = document.getElementById("main-table");
+      let steadyTransferAdvise = document.getElementById(
+        "steady-transfer-till-eom"
+      );
+      steadyTransferAdvise.innerHTML =
+        parseInt(mainInfo.steadyTransferToEndOfMonthInKbps) + " kB/s";
 
       let readableTodayLeftElem = document.getElementById("today-data-left");
       readableTodayLeftElem.innerHTML =
         bytesToGigaBytes(mainInfo.bytesLeftToday) + " GB";
 
+      let tableElem = document.getElementById("main-table");
       for (i = 0; i < mainInfo.healthySchedule.length; i++) {
         // Print schedule for rest of the month
         let newRow = tableElem.insertRow(-1);

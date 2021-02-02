@@ -11,7 +11,7 @@
     "96": "icons/base_icon.svg"
   },
 
-  "permissions": ["*://192.168.1.1/*"],
+  "permissions": ["*://192.168.1.1/*", "storage"],
 
   "browser_action": {
     "default_icon": "icons/base_icon.svg",

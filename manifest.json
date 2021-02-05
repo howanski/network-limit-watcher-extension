@@ -11,7 +11,11 @@
     "96": "icons/base_icon.svg"
   },
 
-  "permissions": ["*://192.168.1.1/*", "storage"],
+  "permissions": [
+    "*://192.168.1.1/*",
+    "storage",
+    "*://transmission-host/*"
+  ],
 
   "browser_action": {
     "default_icon": "icons/base_icon.svg",
@@ -20,6 +24,6 @@
   },
 
   "background": {
-    "scripts": ["bg-worker.js"]
+    "scripts": ["bg-worker.js", "bg-transmission.js"]
   }
 }

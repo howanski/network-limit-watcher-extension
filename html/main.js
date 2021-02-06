@@ -49,9 +49,9 @@
 
       let newCell = newRow.insertCell(0);
       let dateObject = new Date(mainInfo.healthySchedule[i].date);
-      let newText = document.createTextNode(
-        dateObject.getDate() + "." + (dateObject.getMonth() + 1)
-      );
+      let newText = dateObject.toDateString();
+      newText = newText.substring(0, newText.length - 5);
+      newText = document.createTextNode(newText);
       newCell.appendChild(newText);
 
       let newCell2 = newRow.insertCell(1);

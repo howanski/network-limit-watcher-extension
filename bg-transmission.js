@@ -65,7 +65,7 @@
     function runAsync(dataSavedInLocalStorage) {
       let config = dataSavedInLocalStorage.data;
       let topSpeed = config.steadyTransferToEndOfMonthInKbps;
-      if (topSpeed & (topSpeed > freeTransferBufferWindow)) {
+      if (topSpeed && (topSpeed > freeTransferBufferWindow)) {
         topSpeed -= freeTransferBufferWindow;
       } else {
         topSpeed = 1;

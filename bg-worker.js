@@ -41,20 +41,10 @@
         timeOfEnd = new Date(
           currentYear,
           currentMonth + 1,
-          localData.startOfMonthDay,
-          23,
-          59,
-          59
+          localData.startOfMonthDay
         );
       } else {
-        timeOfEnd = new Date(
-          currentYear + 1,
-          0,
-          localData.startOfMonthDay,
-          23,
-          59,
-          59
-        );
+        timeOfEnd = new Date(currentYear + 1, 0, localData.startOfMonthDay);
       }
     } else {
       if (currentMonth != 0) {
@@ -69,10 +59,7 @@
       timeOfEnd = new Date(
         currentYear,
         currentMonth,
-        localData.startOfMonthDay,
-        23,
-        59,
-        59
+        localData.startOfMonthDay
       );
     }
     return [timeOfStart, timeOfEnd, nowExactly];

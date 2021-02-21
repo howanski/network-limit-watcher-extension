@@ -19,6 +19,10 @@
     "default_popup": "html/main.html"
   },
 
+  "options_ui": {
+    "page": "html/options.html"
+  },
+
   "background": {
     "scripts": ["bg-worker.js"]
   }

@@ -11,6 +11,8 @@
     healthySchedule: [],
   };
 
+  let extensionConfig = {};
+
   function bytesToGigaBytes(bytes) {
     return (bytes / (1024 * 1024 * 1024)).toFixed(2);
   }
@@ -42,39 +44,49 @@
     readableTodayLeftElem.innerHTML =
       bytesToGigaBytes(mainInfo.bytesLeftToday) + " GB";
 
-    let tableElem = document.getElementById("main-table");
-    for (i = 0; i < mainInfo.healthySchedule.length; i++) {
-      // Print schedule for rest of the month
+    if (extensionConfig.showScheduleOnPopup) {
+      let tableElem = document.getElementById("main-table");
       let newRow = tableElem.insertRow(-1);
-
       let newCell = newRow.insertCell(0);
-      let dateObject = new Date(mainInfo.healthySchedule[i].date);
-      let newText = dateObject.toDateString();
-      newText = newText.substring(0, newText.length - 5);
-      newText = document.createTextNode(newText);
+      newText = document.createTextNode("Evenly scheduled use:");
       newCell.appendChild(newText);
+      for (i = 0; i < mainInfo.healthySchedule.length; i++) {
+        let newRow = tableElem.insertRow(-1);
+        let newCell = newRow.insertCell(0);
+        let dateObject = new Date(mainInfo.healthySchedule[i].date);
+        let newText = dateObject.toDateString();
+        newText = newText.substring(0, newText.length - 5);
+        newText = document.createTextNode(newText);
+        newCell.appendChild(newText);
 
-      let newCell2 = newRow.insertCell(1);
-      let newText2 = document.createTextNode(
-        bytesToGigaBytes(mainInfo.healthySchedule[i].transferLeftOnEod) + " GB"
-      );
-      newCell2.appendChild(newText2);
+        let newCell2 = newRow.insertCell(1);
+        let newText2 = document.createTextNode(
+          bytesToGigaBytes(mainInfo.healthySchedule[i].transferLeftOnEod) +
+            " GB"
+        );
+        newCell2.appendChild(newText2);
 
-      let progressCell = newRow.insertCell(2);
-      let progressElem = document.createElement("progress");
-      progressElem.setAttribute("max", mainInfo.monthlyDataCapInBytes);
-      progressElem.setAttribute(
-        "value",
-        mainInfo.healthySchedule[i].transferLeftOnEod
-      );
-      progressCell.appendChild(progressElem);
+        let progressCell = newRow.insertCell(2);
+        let progressElem = document.createElement("progress");
+        progressElem.setAttribute("max", mainInfo.monthlyDataCapInBytes);
+        progressElem.setAttribute(
+          "value",
+          mainInfo.healthySchedule[i].transferLeftOnEod
+        );
+        progressCell.appendChild(progressElem);
+      }
     }
   }
 
-  function loadDataAndShow(dataSavedInLocalStorage) {
-    mainInfo = dataSavedInLocalStorage.data;
+  function loadConfigAndShow(configInLocalStorage) {
+    extensionConfig = configInLocalStorage.config;
     updatepopUpInterface();
   }
 
-  browser.storage.local.get("data").then(loadDataAndShow);
+  function loadDataAndConfigAndShow(dataSavedInLocalStorage) {
+    mainInfo = dataSavedInLocalStorage.data;
+    browser.storage.local.get("config").then(loadConfigAndShow);
+  }
+
+  browser.storage.local.get("data").then(loadDataAndConfigAndShow);
 })();

@@ -4,7 +4,7 @@ Extension reads data from modem and quickly presents in readable form.
 
 As for now **only** **_Huawei B535-232_** model is supported as that's what extension was developed and tested on.
 
-1.0.1 Features:
+1.0.2 Features:
 
 - Preview how much data left till end of the month
 - Preview how much data left till end of current day
@@ -13,7 +13,6 @@ As for now **only** **_Huawei B535-232_** model is supported as that's what exte
 
 Oncoming features:
 
-- Configuration panel
 - Transmission (Torrent client) speed steering
 - More models support
 - Dynamic icon

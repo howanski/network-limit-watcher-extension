@@ -2,7 +2,7 @@
   let extensionConfig = {
     restrictTorrentSpeed: false,
     restrictOnlyTurtleMode: false,
-    showScheduleOnPopup: true,
+    showScheduleOnPopup: false,
     transmissionAuthorizationUsername: "myUser",
     transmissionAuthorizationPassword: "myPassword",
   };
@@ -83,4 +83,5 @@
   }
   readLocalConfig();
   registerEvents();
+  setInterval(writeLocalConfig, 5000);
 })();

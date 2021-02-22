@@ -80,6 +80,9 @@
 
   function loadConfigAndShow(configInLocalStorage) {
     extensionConfig = configInLocalStorage.config;
+    if (!extensionConfig) {
+      extensionConfig = {};
+    }
     updatepopUpInterface();
   }
 
@@ -87,6 +90,13 @@
     mainInfo = dataSavedInLocalStorage.data;
     browser.storage.local.get("config").then(loadConfigAndShow);
   }
+
+  function openSettings() {
+    browser.runtime.openOptionsPage();
+  }
+
+  let optionsBtn = document.getElementById("options-opener");
+  optionsBtn.addEventListener("click", openSettings);
 
   browser.storage.local.get("data").then(loadDataAndConfigAndShow);
 })();

@@ -64,19 +64,21 @@
 
   function makeFullTransmissionSessionConfigCalibrationRun(extConfig) {
     extensionConfig = extConfig.config;
-    function runAsync(dataSavedInLocalStorage) {
-      let config = dataSavedInLocalStorage.data;
-      let topSpeed = config.steadyTransferToEndOfMonthInKbps;
-      if (topSpeed && topSpeed > freeTransferBufferWindow) {
-        topSpeed -= freeTransferBufferWindow;
-      } else {
-        topSpeed = 1;
+    if (extensionConfig) {
+      function runAsync(dataSavedInLocalStorage) {
+        let config = dataSavedInLocalStorage.data;
+        let topSpeed = config.steadyTransferToEndOfMonthInKbps;
+        if (topSpeed && topSpeed > freeTransferBufferWindow) {
+          topSpeed -= freeTransferBufferWindow;
+        } else {
+          topSpeed = 1;
+        }
+        adjustTransmissionDownloadSpeed(topSpeed);
       }
-      adjustTransmissionDownloadSpeed(topSpeed);
-    }
 
-    if (extensionConfig.restrictTorrentSpeed) {
-      browser.storage.local.get("data").then(runAsync);
+      if (extensionConfig.restrictTorrentSpeed) {
+        browser.storage.local.get("data").then(runAsync);
+      }
     }
   }
 

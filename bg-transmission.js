@@ -2,8 +2,6 @@
   let extensionConfig = {};
 
   let transmissionHost = "transmission-host";
-  // C:\Windows\System32\drivers\etc\hosts
-  // /etc/hosts
   let transmissionHostPort = 9091;
   let freeTransferBufferWindow = 50;
 

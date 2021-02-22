@@ -12,8 +12,9 @@ As for now **only** **_Huawei B535-232_** model is supported as that's what exte
 - Preview what data exchange speed will not exceed transfer limit till end of month
 - Transmission (Torrent client) speed steering
 
-Oncoming features:
+Future features:
 
 - More modem models support
 - Dynamic icon
 - Current transfer rates
+- Multilang support

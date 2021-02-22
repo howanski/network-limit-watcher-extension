@@ -76,7 +76,8 @@
       let thisMonthLengthInDays = milisecondsToFullDays(
         thisMonthLengthInMiliseconds
       );
-      let dailyConsumableBytes =
+
+      localData.dailyDataCapInBytes =
         localData.monthlyDataCapInBytes / thisMonthLengthInDays;
 
       let virtualBytesToConsume = localData.monthlyDataCapInBytes;
@@ -95,7 +96,7 @@
       let healthySchedule = [];
       for (i = 0; i < thisMonthLengthInDays; i++) {
         //iterating through days of current month
-        virtualBytesToConsume -= dailyConsumableBytes;
+        virtualBytesToConsume -= localData.dailyDataCapInBytes;
         let virtualDate = new Date(tosEpoh + i * 24 * 60 * 60 * 1000);
         if (
           virtualDate.getDate() == nowExactly.getDate() &&
@@ -190,7 +191,7 @@
           startOfMonthDay: 1,
           bytesLeftThisMonth: 0,
           bytesLeftToday: 0,
-          dailyConsumableBytes: 0,
+          dailyDataCapInBytes: 0,
           milisecondsLeftThisMonth: 0,
           steadyTransferToEndOfMonthInKbps: 0,
           healthySchedule: [],

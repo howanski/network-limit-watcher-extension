@@ -5,7 +5,7 @@
     startOfMonthDay: 1,
     bytesLeftThisMonth: 0,
     bytesLeftToday: 0,
-    dailyConsumableBytes: 0,
+    dailyDataCapInBytes: 0,
     milisecondsLeftThisMonth: 0,
     steadyTransferToEndOfMonthInKbps: 0,
     healthySchedule: [],
@@ -21,6 +21,18 @@
     let readableMonthLeftElem = document.getElementById("month-data-left");
     readableMonthLeftElem.innerHTML =
       bytesToGigaBytes(mainInfo.bytesLeftThisMonth) + " GB";
+
+    let readableDilyLeftProgressElem = document.getElementById(
+      "daily-data-left-progress"
+    );
+    readableDilyLeftProgressElem.setAttribute(
+      "max",
+      parseInt(mainInfo.dailyDataCapInBytes)
+    );
+    readableDilyLeftProgressElem.setAttribute(
+      "value",
+      parseInt(mainInfo.bytesLeftToday)
+    );
 
     let readableMonthLeftProgressElem = document.getElementById(
       "month-data-left-progress"

@@ -1,8 +1,8 @@
 (function () {
   let extensionConfig = {
-    restrictTorrentSpeed: false,
-    restrictOnlyTurtleMode: false,
     showScheduleOnPopup: false,
+    effectiveTransferType: "eom",
+    restrictTorrentSpeed: false,
     transmissionAuthorizationUsername: "myUser",
     transmissionAuthorizationPassword: "myPassword",
   };
@@ -23,6 +23,13 @@
         scheduleSwitch.checked = true;
       } else {
         scheduleSwitch.checked = false;
+      }
+
+      let speedTypeSelector = document.getElementById("transfer-rate-select");
+      for (option of speedTypeSelector.options) {
+        if (option.value == extensionConfig.effectiveTransferType) {
+          option.selected = true;
+        }
       }
 
       let transmissionSwitch = document.getElementById("transmission-switch");
@@ -57,6 +64,16 @@
     let scheduleSwitch = document.getElementById("schedule-switch");
     scheduleSwitch.addEventListener("change", flipScheduleSwitch);
 
+    function changeSpeedCalculatingAlgorithm(event) {
+      let eventTarget = event.target;
+      extensionConfig.effectiveTransferType = eventTarget.value;
+    }
+    let speedTypeSelector = document.getElementById("transfer-rate-select");
+    speedTypeSelector.addEventListener(
+      "change",
+      changeSpeedCalculatingAlgorithm
+    );
+
     function flipTransmissionSwitch(event) {
       let eventTarget = event.target;
       extensionConfig.restrictTorrentSpeed = eventTarget.checked;
@@ -78,8 +95,13 @@
       extensionConfig.transmissionAuthorizationPassword = eventTarget.value;
       writeLocalConfig();
     }
-    let transmissionPasswordInput = document.getElementById("transmission-password");
-    transmissionPasswordInput.addEventListener("keyup", changeTransmissionPassword);
+    let transmissionPasswordInput = document.getElementById(
+      "transmission-password"
+    );
+    transmissionPasswordInput.addEventListener(
+      "keyup",
+      changeTransmissionPassword
+    );
   }
   readLocalConfig();
   registerEvents();

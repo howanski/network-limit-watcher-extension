@@ -19,8 +19,6 @@
             transmissionSessionIdHeader
           );
           adjustTransmissionDownloadSpeed(speed);
-        } else if (response.status == 200) {
-          //thx, bye
         }
       }
     };
@@ -64,8 +62,11 @@
     extensionConfig = extConfig.config;
     if (extensionConfig) {
       function runAsync(dataSavedInLocalStorage) {
-        let config = dataSavedInLocalStorage.data;
-        let topSpeed = config.steadyTransferToEndOfMonthInKbps;
+        let data = dataSavedInLocalStorage.data;
+        let topSpeed = data.steadyTransferToEndOfMonthInKbps;
+        if (extensionConfig.effectiveTransferType == "eod") {
+          topSpeed = data.steadyTransferToEndOfDayInKbps;
+        }
         if (topSpeed && topSpeed > freeTransferBufferWindow) {
           topSpeed -= freeTransferBufferWindow;
         } else {

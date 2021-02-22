@@ -62,7 +62,16 @@
         localData.startOfMonthDay
       );
     }
-    return [timeOfStart, timeOfEnd, nowExactly];
+
+    let endOfDay = new Date(
+      currentYear,
+      currentMonth,
+      currentDayOfMonth,
+      23,
+      59,
+      59
+    );
+    return [timeOfStart, timeOfEnd, nowExactly, endOfDay];
   }
 
   function recalculateStatistics() {
@@ -70,7 +79,12 @@
       localData.bytesLeftThisMonth =
         localData.monthlyDataCapInBytes - localData.currentMonthMovementInBytes;
 
-      let [timeOfStart, timeOfEnd, nowExactly] = getCurrentMonthBorders();
+      let [
+        timeOfStart,
+        timeOfEnd,
+        nowExactly,
+        endOfDay,
+      ] = getCurrentMonthBorders();
 
       let thisMonthLengthInMiliseconds = timeOfEnd - timeOfStart;
       let thisMonthLengthInDays = milisecondsToFullDays(
@@ -114,6 +128,12 @@
           };
         }
       }
+
+      let milisecondsLeftToday = endOfDay.getTime() - nowExactly.getTime();
+      localData.steadyTransferToEndOfDayInKbps = parseInt(
+        localData.bytesLeftToday / 1024 / (milisecondsLeftToday / 1000)
+      );
+
       localData.healthySchedule = healthySchedule;
       storeDataInLocalStorage();
     }
@@ -194,6 +214,7 @@
           dailyDataCapInBytes: 0,
           milisecondsLeftThisMonth: 0,
           steadyTransferToEndOfMonthInKbps: 0,
+          steadyTransferToEndOfDayInKbps: 0,
           healthySchedule: [],
         };
       }
@@ -205,7 +226,7 @@
   }
 
   function appRunner() {
-    browser.storage.local.clear();
+    // browser.storage.local.clear(); // for debug only...
     makeFullDataProcess();
     setInterval(makeFullDataProcess, 10000);
   }

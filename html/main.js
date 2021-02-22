@@ -8,6 +8,7 @@
     dailyDataCapInBytes: 0,
     milisecondsLeftThisMonth: 0,
     steadyTransferToEndOfMonthInKbps: 0,
+    steadyTransferToEndOfDayInKbps: 0,
     healthySchedule: [],
   };
 
@@ -49,8 +50,14 @@
     let steadyTransferAdvise = document.getElementById(
       "steady-transfer-till-eom"
     );
-    steadyTransferAdvise.innerHTML =
-      parseInt(mainInfo.steadyTransferToEndOfMonthInKbps) + " kB/s";
+
+    if ("eom" == extensionConfig.effectiveTransferType) {
+      steadyTransferAdvise.innerHTML =
+        parseInt(mainInfo.steadyTransferToEndOfMonthInKbps) + " kB/s";
+    } else {
+      steadyTransferAdvise.innerHTML =
+        parseInt(mainInfo.steadyTransferToEndOfDayInKbps) + " kB/s";
+    }
 
     let readableTodayLeftElem = document.getElementById("today-data-left");
     readableTodayLeftElem.innerHTML =

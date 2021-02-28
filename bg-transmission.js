@@ -25,20 +25,20 @@
     httpRequest.open(
       "POST",
       "http://" +
-        transmissionHost +
-        ":" +
-        transmissionHostPort +
-        "/transmission/rpc",
+      transmissionHost +
+      ":" +
+      transmissionHostPort +
+      "/transmission/rpc",
       true
     );
     httpRequest.setRequestHeader(
       "Authorization",
       "Basic " +
-        btoa(
-          extensionConfig.transmissionAuthorizationUsername +
-            ":" +
-            extensionConfig.transmissionAuthorizationPassword
-        )
+      btoa(
+        extensionConfig.transmissionAuthorizationUsername +
+        ":" +
+        extensionConfig.transmissionAuthorizationPassword
+      )
     );
     httpRequest.setRequestHeader(
       transmissionSessionIdHeader,
@@ -68,14 +68,11 @@
           topSpeed = data.steadyTransferToEndOfDayInKbps;
         }
 
-        if (topSpeed && topSpeed > extensionConfig.transmissionSpeedMargin) {
-          topSpeed -= extensionConfig.transmissionSpeedMargin;
-        }
+        topSpeed -= extensionConfig.transmissionSpeedMargin;
 
         if (topSpeed < 5) {
           topSpeed = 5;
         }
-
         adjustTransmissionDownloadSpeed(topSpeed);
       }
 

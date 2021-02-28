@@ -14,7 +14,7 @@
   "permissions": [
     "*://192.168.1.1/*",
     "storage",
-    "*://transmission-host/*"
+    "http://transmission-host/*"
   ],
 
   "browser_action": {

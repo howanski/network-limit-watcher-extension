@@ -3,7 +3,6 @@
 
   let transmissionHost = "transmission-host";
   let transmissionHostPort = 9091;
-  let freeTransferBufferWindow = 50;
 
   let transmissionSessionIdHeader = "X-Transmission-Session-Id";
   let transmissionSessionIdValue = "We'll find out";
@@ -67,8 +66,8 @@
         if (extensionConfig.effectiveTransferType == "eod") {
           topSpeed = data.steadyTransferToEndOfDayInKbps;
         }
-        if (topSpeed && topSpeed > freeTransferBufferWindow) {
-          topSpeed -= freeTransferBufferWindow;
+        if (topSpeed && topSpeed > extensionConfig.transmissionSpeedMargin) {
+          topSpeed -= extensionConfig.transmissionSpeedMargin;
         } else {
           topSpeed = 1;
         }

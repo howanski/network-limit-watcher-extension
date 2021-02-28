@@ -3,6 +3,7 @@
     showScheduleOnPopup: false,
     effectiveTransferType: "eom",
     restrictTorrentSpeed: false,
+    transmissionSpeedMargin: 50,
     transmissionAuthorizationUsername: "myUser",
     transmissionAuthorizationPassword: "myPassword",
   };
@@ -39,6 +40,9 @@
         transmissionSwitch.checked = false;
       }
 
+      let transmissionSpeedMarginInput = document.getElementById("transmission-speed-margin");
+      transmissionSpeedMarginInput.value = extensionConfig.transmissionSpeedMargin;
+
       let transmissionUserInput = document.getElementById("transmission-user");
       transmissionUserInput.value =
         extensionConfig.transmissionAuthorizationUsername;
@@ -67,6 +71,7 @@
     function changeSpeedCalculatingAlgorithm(event) {
       let eventTarget = event.target;
       extensionConfig.effectiveTransferType = eventTarget.value;
+      writeLocalConfig();
     }
     let speedTypeSelector = document.getElementById("transfer-rate-select");
     speedTypeSelector.addEventListener(
@@ -81,6 +86,15 @@
     }
     let transmissionSwitch = document.getElementById("transmission-switch");
     transmissionSwitch.addEventListener("change", flipTransmissionSwitch);
+
+
+    function changeTransmissionSpeedMargin(event) {
+      let eventTarget = event.target;
+      extensionConfig.transmissionSpeedMargin = parseInt(eventTarget.value);
+      writeLocalConfig();
+    }
+    let transmissionSpeedMarginInput = document.getElementById("transmission-speed-margin");
+    transmissionSpeedMarginInput.addEventListener("change", changeTransmissionSpeedMargin);
 
     function changeTransmissionUser(event) {
       let eventTarget = event.target;

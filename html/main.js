@@ -51,12 +51,12 @@
       "steady-transfer-till-eom"
     );
 
-    if ("eom" == extensionConfig.effectiveTransferType) {
+    if ("eod" == extensionConfig.effectiveTransferType) {
       steadyTransferAdvise.innerHTML =
-        parseInt(mainInfo.steadyTransferToEndOfMonthInKbps) + " kB/s";
+      parseInt(mainInfo.steadyTransferToEndOfDayInKbps) + " kB/s";
     } else {
       steadyTransferAdvise.innerHTML =
-        parseInt(mainInfo.steadyTransferToEndOfDayInKbps) + " kB/s";
+        parseInt(mainInfo.steadyTransferToEndOfMonthInKbps) + " kB/s";
     }
 
     let readableTodayLeftElem = document.getElementById("today-data-left");

@@ -63,14 +63,19 @@
       function runAsync(dataSavedInLocalStorage) {
         let data = dataSavedInLocalStorage.data;
         let topSpeed = data.steadyTransferToEndOfMonthInKbps;
+
         if (extensionConfig.effectiveTransferType == "eod") {
           topSpeed = data.steadyTransferToEndOfDayInKbps;
         }
+
         if (topSpeed && topSpeed > extensionConfig.transmissionSpeedMargin) {
           topSpeed -= extensionConfig.transmissionSpeedMargin;
-        } else {
-          topSpeed = 1;
         }
+
+        if (topSpeed < 5) {
+          topSpeed = 5;
+        }
+
         adjustTransmissionDownloadSpeed(topSpeed);
       }
 

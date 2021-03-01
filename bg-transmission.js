@@ -7,7 +7,7 @@
   let transmissionSessionIdHeader = "X-Transmission-Session-Id";
   let transmissionSessionIdValue = "We'll find out";
 
-  function adjustTransmissionDownloadSpeed(speed) {
+  function adjustTransmissionDownloadSpeed(topSpeed, lowerSpeed) {
     let httpRequest = new XMLHttpRequest();
     httpRequest.onreadystatechange = function () {
       let response = this;
@@ -17,7 +17,7 @@
           transmissionSessionIdValue = response.getResponseHeader(
             transmissionSessionIdHeader
           );
-          adjustTransmissionDownloadSpeed(speed);
+          adjustTransmissionDownloadSpeed(topSpeed, lowerSpeed);
         }
       }
     };
@@ -50,8 +50,8 @@
     let message = {
       method: "session-set",
       arguments: {
-        "alt-speed-down": speed,
-        "speed-limit-down": speed,
+        "alt-speed-down": lowerSpeed,
+        "speed-limit-down": topSpeed,
       },
     };
     httpRequest.send(JSON.stringify(message));
@@ -62,18 +62,23 @@
     if (extensionConfig) {
       function runAsync(dataSavedInLocalStorage) {
         let data = dataSavedInLocalStorage.data;
-        let topSpeed = data.steadyTransferToEndOfMonthInKbps;
+        let lowerSpeed = data.steadyTransferToEndOfMonthInKbps;
 
         if (extensionConfig.effectiveTransferType == "eod") {
-          topSpeed = data.steadyTransferToEndOfDayInKbps;
+          lowerSpeed = data.steadyTransferToEndOfDayInKbps;
         }
 
-        topSpeed -= extensionConfig.transmissionSpeedMargin;
+        let topSpeed = lowerSpeed;
+        lowerSpeed -= extensionConfig.transmissionSpeedMargin;
 
         if (topSpeed < 5) {
           topSpeed = 5;
         }
-        adjustTransmissionDownloadSpeed(topSpeed);
+
+        if (lowerSpeed < 5) {
+          lowerSpeed = 5;
+        }
+        adjustTransmissionDownloadSpeed(topSpeed, lowerSpeed);
       }
 
       if (extensionConfig.restrictTorrentSpeed) {

@@ -16,7 +16,7 @@
   }
 
   function milisecondsToFullDays(miliseconds) {
-    return parseInt(miliseconds / (1000 * 60 * 60 * 24));
+    return parseInt((miliseconds + 65 * 60 * 1000) / (1000 * 60 * 60 * 24));
   }
 
   function getCurrentMonthBorders() {

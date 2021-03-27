@@ -4,6 +4,7 @@
     effectiveTransferType: "eom",
     restrictTorrentSpeed: false,
     transmissionSpeedMargin: 50,
+    transmissionSpeedMarginType: "percent",
     transmissionAuthorizationUsername: "myUser",
     transmissionAuthorizationPassword: "myPassword",
   };
@@ -42,6 +43,13 @@
 
       let transmissionSpeedMarginInput = document.getElementById("transmission-speed-margin");
       transmissionSpeedMarginInput.value = extensionConfig.transmissionSpeedMargin;
+
+      let transmissionSpeedMarginTypeSelector = document.getElementById("transmission-speed-margin-type");
+      for (option of transmissionSpeedMarginTypeSelector.options) {
+        if (option.value == extensionConfig.transmissionSpeedMarginType) {
+          option.selected = true;
+        }
+      }
 
       let transmissionUserInput = document.getElementById("transmission-user");
       transmissionUserInput.value =
@@ -95,6 +103,14 @@
     }
     let transmissionSpeedMarginInput = document.getElementById("transmission-speed-margin");
     transmissionSpeedMarginInput.addEventListener("change", changeTransmissionSpeedMargin);
+
+    function changeTransmissionSpeedMarginType(event) {
+      let eventTarget = event.target;
+      extensionConfig.transmissionSpeedMarginType = eventTarget.value;
+      writeLocalConfig();
+    }
+    let transmissionSpeedMarginTypeSelector = document.getElementById("transmission-speed-margin-type");
+    transmissionSpeedMarginTypeSelector.addEventListener("change", changeTransmissionSpeedMarginType);
 
     function changeTransmissionUser(event) {
       let eventTarget = event.target;

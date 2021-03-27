@@ -1,86 +1,113 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="main.css" />
-  </head>
 
-  <body>
-    <table style="width: 100%" id="config-table">
-      <tbody>
-        <tr>
-          <td><h3>Show recommended usage schedule</h3></td>
-          <td>
-            <label class="switch">
-              <input id="schedule-switch" type="checkbox" />
-              <span class="slider round"></span>
-            </label>
-          </td>
-        </tr>
-        <tr>
-          <td><h3>Effective speed algorithm</h3></td>
-          <td>
-            <select id="transfer-rate-select">
-              <option value="eom">kB/s lasting till end of month</option>
-              <option value="eod">kB/s lasting till end of day</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td><h3>Restrict transmission speed</h3></td>
-          <td>
-            <label class="switch">
-              <input id="transmission-switch" type="checkbox" />
-              <span class="slider round"></span>
-            </label>
-          </td>
-        </tr>
-        <tr>
-          <td><h3 class="tooltip">Alt speed margin (kB/s)
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="main.css" />
+</head>
+
+<body>
+  <table style="width: 100%" id="config-table">
+    <tbody>
+      <tr>
+        <td>
+          <h3>Show recommended usage schedule</h3>
+        </td>
+        <td>
+          <label class="switch">
+            <input id="schedule-switch" type="checkbox" />
+            <span class="slider round"></span>
+          </label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Effective speed algorithm</h3>
+        </td>
+        <td>
+          <select id="transfer-rate-select">
+            <option value="eom">kB/s lasting till end of month</option>
+            <option value="eod">kB/s lasting till end of day</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Restrict transmission speed</h3>
+        </td>
+        <td>
+          <label class="switch">
+            <input id="transmission-switch" type="checkbox" />
+            <span class="slider round"></span>
+          </label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3 class="tooltip">Alt speed margin
             <span class="tooltiptext">
-              Torrent speed will be set to "effective speed", torrent alternative speed will be set to "effective speed" - "margin"
+              Torrent speed will be set to "effective speed", torrent alternative speed will be set to "effective speed"
+              - "margin" or "e.s." * "margin" if percent option selected
             </span>
-          </h3></td>
-          <td><input id="transmission-speed-margin" type="number" /></td>
-        </tr>
-        <tr>
-          <td><h3>Router model</h3></td>
-          <td>
-            <div class="tooltip">
-              Huawei B535-232
-              <span class="tooltiptext">I can't test it on anything else right now :(</span>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><h3>Transmission host address</h3></td>
-          <td>
-            <div class="tooltip">
-              transmission-host
-              <span class="tooltiptext">
-                You have to manually setup host in '/etc/hosts' (Linux) or
-                'C:\Windows\System32\drivers\etc\hosts' (Windows) as I don't
-                have permission to wander around your network :)
-              </span>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><h3>Transmission host port</h3></td>
-          <td>9091</td>
-        </tr>
-        <tr>
-          <td><h3>Transmission host user</h3></td>
-          <td><input id="transmission-user" type="text" /></td>
-        </tr>
-        <tr>
-          <td><h3>Transmission host password</h3></td>
-          <td><input id="transmission-password" type="password" /></td>
-        </tr>
-      </tbody>
-    </table>
+          </h3>
+        </td>
+        <td>
+          <input id="transmission-speed-margin" type="number" />
+          <select id="transmission-speed-margin-type">
+            <option value="percent">%</option>
+            <option value="kbps">kB/s</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Router model</h3>
+        </td>
+        <td>
+          <div class="tooltip">
+            Huawei B535-232
+            <span class="tooltiptext">I can't test it on anything else right now :(</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Transmission host address</h3>
+        </td>
+        <td>
+          <div class="tooltip">
+            transmission-host
+            <span class="tooltiptext">
+              You have to manually setup host in '/etc/hosts' (Linux) or
+              'C:\Windows\System32\drivers\etc\hosts' (Windows) as I don't
+              have permission to wander around your network :)
+            </span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Transmission host port</h3>
+        </td>
+        <td>9091</td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Transmission host user</h3>
+        </td>
+        <td><input id="transmission-user" type="text" /></td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Transmission host password</h3>
+        </td>
+        <td><input id="transmission-password" type="password" /></td>
+      </tr>
+    </tbody>
+  </table>
 
-    <script src="options.js"></script>
-  </body>
+  <script src="options.js"></script>
+</body>
+
 </html>

@@ -69,7 +69,13 @@
         }
 
         let topSpeed = lowerSpeed;
-        lowerSpeed -= extensionConfig.transmissionSpeedMargin;
+        if (extensionConfig.transmissionSpeedMarginType == "percent") {
+          lowerSpeed *= extensionConfig.transmissionSpeedMargin;
+          lowerSpeed /= 100;
+          lowerSpeed = parseInt(lowerSpeed);
+        } else { // "kbps"
+          lowerSpeed -= extensionConfig.transmissionSpeedMargin;
+        }
 
         if (topSpeed < 5) {
           topSpeed = 5;

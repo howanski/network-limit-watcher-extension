@@ -74,7 +74,11 @@
           lowerSpeed /= 100;
           lowerSpeed = parseInt(lowerSpeed);
         } else if (extensionConfig.transmissionSpeedMarginType == "ave-herd") { //average herding
-          lowerSpeed = (topSpeed - data.normalMonthlyTransfer) * 2 + data.normalMonthlyTransfer;
+          let agression = extensionConfig.transmissionSpeedMargin;
+          if (agression < 2) {
+            agression = 2;
+          }
+          lowerSpeed = (topSpeed - data.normalMonthlyTransfer) * agression + data.normalMonthlyTransfer;
         } else if (extensionConfig.transmissionSpeedMarginType == "man-herd") { //manual herding
           lowerSpeed = (topSpeed - extensionConfig.transmissionSpeedMargin) * 2 + extensionConfig.transmissionSpeedMargin;
         } else if (extensionConfig.transmissionSpeedMarginType == "man-herd-5") { //manual herding x5

@@ -118,11 +118,14 @@
     Alt Speed Margin represents how alternative speed limit is calculated and set in Transmission:<br>
     2.1 <b>%</b> : alt speed = effective speed * [input]%<br>
     2.2 <b>kB/s</b> : alt speed = effective speed - [input]<br>
-    2.3 <b>average herding</b> : alt speed = (effective speed - month's average speed) * 2 + month's average speed<br>
+    2.3 <b>average herding</b> : alt speed = (effective speed - month's average speed) * [input] + month's average speed<br>
+    [>     Side note: input values below 2 are incorrect and will be ignored, values from 2 to 5 seem sane]<br>
     2.4 <b>manual herding</b> : alt speed = (effective speed - [input]) * 2 + [input]<br>
     2.5 <b>manual herding x5</b> : alt speed = (effective speed - [input]) * 5 + [input] // - just more aggresive
     version of previous algo<br><br>
     Herding algoritms are made to setup alt speed, so effective speed will reach given value in measurable time.
+    <br><br>
+    [>     Side note: calculated values below 5kB/s are rounded to 5kB/s - Transmission behaves bad]
     <h3>3. Router model</h3>
     There is currently only one model supported - Huawei B535-232 as I don't have possibility to test it on other
     models.<br>

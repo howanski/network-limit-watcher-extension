@@ -59,6 +59,9 @@
         parseInt(mainInfo.steadyTransferToEndOfMonthInKbps) + " kB/s";
     }
 
+    let normalMonthlyTransferElem = document.getElementById("normal-monthly-transfer");
+    normalMonthlyTransferElem.innerHTML = parseInt(mainInfo.normalMonthlyTransfer) + " kB/s";
+
     let readableTodayLeftElem = document.getElementById("today-data-left");
     readableTodayLeftElem.innerHTML =
       bytesToGigaBytes(mainInfo.bytesLeftToday) + "&nbsp;GB";

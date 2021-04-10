@@ -21,7 +21,7 @@
   function updatepopUpInterface() {
     let readableMonthLeftElem = document.getElementById("month-data-left");
     readableMonthLeftElem.innerHTML =
-      bytesToGigaBytes(mainInfo.bytesLeftThisMonth) + " GB";
+      bytesToGigaBytes(mainInfo.bytesLeftThisMonth) + "&nbsp;GB";
 
     let readableDilyLeftProgressElem = document.getElementById(
       "daily-data-left-progress"
@@ -53,7 +53,7 @@
 
     if ("eod" == extensionConfig.effectiveTransferType) {
       steadyTransferAdvise.innerHTML =
-      parseInt(mainInfo.steadyTransferToEndOfDayInKbps) + " kB/s";
+        parseInt(mainInfo.steadyTransferToEndOfDayInKbps) + " kB/s";
     } else {
       steadyTransferAdvise.innerHTML =
         parseInt(mainInfo.steadyTransferToEndOfMonthInKbps) + " kB/s";
@@ -61,12 +61,13 @@
 
     let readableTodayLeftElem = document.getElementById("today-data-left");
     readableTodayLeftElem.innerHTML =
-      bytesToGigaBytes(mainInfo.bytesLeftToday) + " GB";
+      bytesToGigaBytes(mainInfo.bytesLeftToday) + "&nbsp;GB";
 
     if (extensionConfig.showScheduleOnPopup) {
       let tableElem = document.getElementById("main-table");
       let newRow = tableElem.insertRow(-1);
       let newCell = newRow.insertCell(0);
+      newCell.colSpan = "3";
       newText = document.createTextNode("Evenly scheduled use:");
       newCell.appendChild(newText);
       for (i = 0; i < mainInfo.healthySchedule.length; i++) {
@@ -81,7 +82,7 @@
         let newCell2 = newRow.insertCell(1);
         let newText2 = document.createTextNode(
           bytesToGigaBytes(mainInfo.healthySchedule[i].transferLeftOnEod) +
-            " GB"
+          "\u00A0GB"
         );
         newCell2.appendChild(newText2);
 

@@ -34,7 +34,7 @@
       </tr>
       <tr>
         <td>
-          <h3>Restrict transmission speed</h3>
+          <h3>Restrict Transmission speeds</h3>
         </td>
         <td>
           <label class="switch">
@@ -47,8 +47,7 @@
         <td>
           <h3 class="tooltip">Alt speed margin
             <span class="tooltiptext">
-              Torrent speed will be set to "effective speed", torrent alternative speed will be set to "effective speed"
-              - "margin" or "e.s." * "margin" if percent option selected
+              Refer to manual part 2
             </span>
           </h3>
         </td>
@@ -57,6 +56,9 @@
           <select id="transmission-speed-margin-type">
             <option value="percent">%</option>
             <option value="kbps">kB/s</option>
+            <option value="ave-herd">average herding</option>
+            <option value="man-herd">manual herding</option>
+            <option value="man-herd-5">manual herding x5</option>
           </select>
         </td>
       </tr>
@@ -67,7 +69,7 @@
         <td>
           <div class="tooltip">
             Huawei B535-232
-            <span class="tooltiptext">I can't test it on anything else right now :(</span>
+            <span class="tooltiptext">Refer to manual part 3</span>
           </div>
         </td>
       </tr>
@@ -79,9 +81,7 @@
           <div class="tooltip">
             transmission-host
             <span class="tooltiptext">
-              You have to manually setup host in '/etc/hosts' (Linux) or
-              'C:\Windows\System32\drivers\etc\hosts' (Windows) as I don't
-              have permission to wander around your network :)
+              Refer to manual part 4
             </span>
           </div>
         </td>
@@ -106,6 +106,34 @@
       </tr>
     </tbody>
   </table>
+
+  <article>
+    <h1>Manual</h1>
+    <h3>1. General informations</h3>
+    > All the communication with your router is read-only and you have to properly configure metrics in it.<br>
+    > Router data are refreshed every 10s and Transmission speeds are adjusted every 30s if on.<br>
+    > "Effective speed" is optimal speed on which your network should be used to reach 0kB left at end of time you have chosen
+
+    <h3>2. Alt Speed Margin</h3>
+    Alt Speed Margin represents how alternative speed limit is calculated and set in Transmission:<br>
+    2.1 <b>%</b> : alt speed = effective speed * [input]%<br>
+    2.2 <b>kB/s</b> : alt speed = effective speed - [input]<br>
+    2.3 <b>average herding</b> : alt speed = (effective speed - month's average speed) * 2 + month's average speed<br>
+    2.4 <b>manual herding</b> : alt speed = (effective speed - [input]) * 2 + [input]<br>
+    2.5 <b>manual herding x5</b> : alt speed = (effective speed - [input]) * 5 + [input] // - just more aggresive
+    version of previous algo<br><br>
+    Herding algoritms are made to setup alt speed, so effective speed will reach given value in measurable time.
+    <h3>3. Router model</h3>
+    There is currently only one model supported - Huawei B535-232 as I don't have possibility to test it on other
+    models.<br>
+    I assume that your router is reachable on 192.168.1.1 address, it will be configurable in the future.<br>
+    <h3>4. Transmission host address</h3>
+    You have to manually setup "transmission-host" IP in proper file as I don't have permission to sniff around your
+    whole network nor ever should be:<br>
+    > Linux - edit file /etc/hosts<br>
+    > Windows - edit file C:\Windows\System32\drivers\etc\hosts
+    <br><br>
+  </article>
 
   <script src="options.js"></script>
 </body>

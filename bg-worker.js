@@ -94,6 +94,8 @@
       localData.dailyDataCapInBytes =
         localData.monthlyDataCapInBytes / thisMonthLengthInDays;
 
+      localData.normalMonthlyTransfer = parseInt(localData.dailyDataCapInBytes / (60*60*24*1000));
+
       let virtualBytesToConsume = localData.monthlyDataCapInBytes;
 
       localData.milisecondsLeftThisMonth =
@@ -212,6 +214,7 @@
           bytesLeftThisMonth: 0,
           bytesLeftToday: 0,
           dailyDataCapInBytes: 0,
+          normalMonthlyTransfer: 0,
           milisecondsLeftThisMonth: 0,
           steadyTransferToEndOfMonthInKbps: 0,
           steadyTransferToEndOfDayInKbps: 0,

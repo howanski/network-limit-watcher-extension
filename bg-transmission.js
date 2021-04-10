@@ -73,6 +73,12 @@
           lowerSpeed *= extensionConfig.transmissionSpeedMargin;
           lowerSpeed /= 100;
           lowerSpeed = parseInt(lowerSpeed);
+        } else if (extensionConfig.transmissionSpeedMarginType == "ave-herd") { //average herding
+          lowerSpeed = (topSpeed - data.normalMonthlyTransfer) * 2 + data.normalMonthlyTransfer;
+        } else if (extensionConfig.transmissionSpeedMarginType == "man-herd") { //manual herding
+          lowerSpeed = (topSpeed - extensionConfig.transmissionSpeedMargin) * 2 + extensionConfig.transmissionSpeedMargin;
+        } else if (extensionConfig.transmissionSpeedMarginType == "man-herd-5") { //manual herding x5
+          lowerSpeed = (topSpeed - extensionConfig.transmissionSpeedMargin) * 5 + extensionConfig.transmissionSpeedMargin;
         } else { // "kbps"
           lowerSpeed -= extensionConfig.transmissionSpeedMargin;
         }

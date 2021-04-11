@@ -77,6 +77,8 @@
           let agression = extensionConfig.transmissionSpeedMargin;
           if (agression < 2) {
             agression = 2;
+          } else if (agression > 5) {
+            agression = 5;
           }
           lowerSpeed = (topSpeed - data.normalMonthlyTransfer) * agression + data.normalMonthlyTransfer;
         } else if (extensionConfig.transmissionSpeedMarginType == "man-herd") { //manual herding

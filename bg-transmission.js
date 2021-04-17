@@ -7,54 +7,63 @@
   let transmissionSessionIdHeader = "X-Transmission-Session-Id";
   let transmissionSessionIdValue = "We'll find out";
 
-  function adjustTransmissionDownloadSpeed(topSpeed, lowerSpeed) {
-    let httpRequest = new XMLHttpRequest();
-    httpRequest.onreadystatechange = function () {
-      let response = this;
-      if (response.readyState == 4) {
-        if (response.status == 409) {
-          //Confilct - bad header, get correct and run again
-          transmissionSessionIdValue = response.getResponseHeader(
-            transmissionSessionIdHeader
-          );
-          adjustTransmissionDownloadSpeed(topSpeed, lowerSpeed);
+  let previousIterationSpeed = 0;
+  let previousIterationAltSpeed = 0;
+
+  function adjustTransmissionDownloadSpeedIfChanged(topSpeed, lowerSpeed) {
+    if (topSpeed > 0 && lowerSpeed > 0 && (previousIterationSpeed != topSpeed || previousIterationAltSpeed != lowerSpeed)) {
+      let httpRequest = new XMLHttpRequest();
+      httpRequest.onreadystatechange = function () {
+        let response = this;
+        if (response.readyState == 4) {
+          if (response.status == 409) {
+            //Confilct - bad header, get correct and run again
+            transmissionSessionIdValue = response.getResponseHeader(
+              transmissionSessionIdHeader
+            );
+            adjustTransmissionDownloadSpeedIfChanged(topSpeed, lowerSpeed);
+            return null;
+          }
         }
-      }
-    };
+      };
 
-    httpRequest.open(
-      "POST",
-      "http://" +
-      transmissionHost +
-      ":" +
-      transmissionHostPort +
-      "/transmission/rpc",
-      true
-    );
-    httpRequest.setRequestHeader(
-      "Authorization",
-      "Basic " +
-      btoa(
-        extensionConfig.transmissionAuthorizationUsername +
+      httpRequest.open(
+        "POST",
+        "http://" +
+        transmissionHost +
         ":" +
-        extensionConfig.transmissionAuthorizationPassword
-      )
-    );
-    httpRequest.setRequestHeader(
-      transmissionSessionIdHeader,
-      transmissionSessionIdValue
-    );
-    httpRequest.setRequestHeader("Content-Type", "application/json");
+        transmissionHostPort +
+        "/transmission/rpc",
+        true
+      );
+      httpRequest.setRequestHeader(
+        "Authorization",
+        "Basic " +
+        btoa(
+          extensionConfig.transmissionAuthorizationUsername +
+          ":" +
+          extensionConfig.transmissionAuthorizationPassword
+        )
+      );
+      httpRequest.setRequestHeader(
+        transmissionSessionIdHeader,
+        transmissionSessionIdValue
+      );
+      httpRequest.setRequestHeader("Content-Type", "application/json");
 
-    httpRequest.overrideMimeType("application/json");
-    let message = {
-      method: "session-set",
-      arguments: {
-        "alt-speed-down": lowerSpeed,
-        "speed-limit-down": topSpeed,
-      },
-    };
-    httpRequest.send(JSON.stringify(message));
+      httpRequest.overrideMimeType("application/json");
+      let message = {
+        method: "session-set",
+        arguments: {
+          "alt-speed-down": lowerSpeed,
+          "speed-limit-down": topSpeed,
+        },
+      };
+      httpRequest.send(JSON.stringify(message));
+
+      previousIterationSpeed = topSpeed;
+      previousIterationAltSpeed = lowerSpeed;
+    }
   }
 
   function makeFullTransmissionSessionConfigCalibrationRun(extConfig) {
@@ -96,7 +105,7 @@
         if (lowerSpeed < 5) {
           lowerSpeed = 5;
         }
-        adjustTransmissionDownloadSpeed(topSpeed, lowerSpeed);
+        adjustTransmissionDownloadSpeedIfChanged(topSpeed, lowerSpeed);
       }
 
       if (extensionConfig.restrictTorrentSpeed) {
@@ -112,7 +121,7 @@
   }
 
   function transmissionModuleRunner() {
-    setInterval(refreshExtensionSettingsAndRun, 30000);
+    setInterval(refreshExtensionSettingsAndRun, 2000);
   }
 
   transmissionModuleRunner();

@@ -7,6 +7,7 @@
     transmissionSpeedMarginType: "percent",
     transmissionAuthorizationUsername: "myUser",
     transmissionAuthorizationPassword: "myPassword",
+    monthlyReserveGigabytes: 0,
   };
 
   function writeLocalConfig() {
@@ -19,6 +20,9 @@
       if (configSubObject) {
         extensionConfig = configSubObject;
       }
+
+      let monthlyReserveInput = document.getElementById("monthly-reserve-in-gb");
+      monthlyReserveInput.value = extensionConfig.monthlyReserveGigabytes;
 
       let scheduleSwitch = document.getElementById("schedule-switch");
       if (extensionConfig.showScheduleOnPopup) {
@@ -75,6 +79,14 @@
     }
     let scheduleSwitch = document.getElementById("schedule-switch");
     scheduleSwitch.addEventListener("change", flipScheduleSwitch);
+
+    function changeMonthlyReserve(event) {
+      let eventTarget = event.target;
+      extensionConfig.monthlyReserveGigabytes = parseInt(eventTarget.value);
+      writeLocalConfig();
+    }
+    let monthlyReserveInput = document.getElementById("monthly-reserve-in-gb");
+    monthlyReserveInput.addEventListener("change", changeMonthlyReserve);
 
     function changeSpeedCalculatingAlgorithm(event) {
       let eventTarget = event.target;

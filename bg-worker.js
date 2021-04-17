@@ -1,6 +1,8 @@
 (function () {
   let localData = {};
 
+  let readOnlyConfig = {};
+
   function storeDataInLocalStorage(continueFunction) {
     let promise = browser.storage.local.set({ data: localData });
     if (continueFunction) {
@@ -94,7 +96,7 @@
       localData.dailyDataCapInBytes =
         localData.monthlyDataCapInBytes / thisMonthLengthInDays;
 
-      localData.normalMonthlyTransfer = parseInt(localData.dailyDataCapInBytes / (60*60*24*1000));
+      localData.normalMonthlyTransfer = parseInt(localData.dailyDataCapInBytes / (60 * 60 * 24 * 1000));
 
       let virtualBytesToConsume = localData.monthlyDataCapInBytes;
 
@@ -103,8 +105,8 @@
 
       localData.steadyTransferToEndOfMonthInKbps = parseInt(
         localData.bytesLeftThisMonth /
-          1024 /
-          (localData.milisecondsLeftThisMonth / 1000)
+        1024 /
+        (localData.milisecondsLeftThisMonth / 1000)
       );
 
       let crawledToToday = false;
@@ -182,6 +184,11 @@
           let nodeValue = currNode.innerHTML;
           if (tagName == "trafficmaxlimit") {
             localData.monthlyDataCapInBytes = parseInt(nodeValue);
+            reserve = parseInt(readOnlyConfig.monthlyReserveGigabytes);
+            if (reserve > 0) {
+              reserve *= 1024 * 1024 * 1024;
+              localData.monthlyDataCapInBytes -= reserve;
+            }
           } else if (tagName == "StartDay") {
             localData.startOfMonthDay = parseInt(nodeValue);
           }
@@ -228,8 +235,17 @@
     storeDataInLocalStorage();
   }
 
+  function refreshConfig() {
+    function readConfigToLocalVariables(config) {
+      readOnlyConfig = config.config;
+    }
+    browser.storage.local.get("config").then(readConfigToLocalVariables);
+  }
+
   function appRunner() {
     // browser.storage.local.clear(); // for debug only...
+    refreshConfig();
+    setInterval(refreshConfig, 2000);
     makeFullDataProcess();
     setInterval(makeFullDataProcess, 10000);
   }

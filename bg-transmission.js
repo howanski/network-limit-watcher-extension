@@ -90,6 +90,20 @@
             agression = 5;
           }
           lowerSpeed = (topSpeed - data.normalMonthlyTransfer) * agression + data.normalMonthlyTransfer;
+        } else if (extensionConfig.transmissionSpeedMarginType == "niggard-herd") { //skinflint herding
+          let agression = extensionConfig.transmissionSpeedMargin;
+          if (agression < 2) {
+            agression = 2;
+          } else if (agression > 5) {
+            agression = 5;
+          }
+          if (topSpeed > data.normalMonthlyTransfer){
+            topSpeed = data.normalMonthlyTransfer;
+          }
+          lowerSpeed = (topSpeed - data.normalMonthlyTransfer) * agression + data.normalMonthlyTransfer;
+          if (lowerSpeed > topSpeed){
+            lowerSpeed = topSpeed;
+          }
         } else if (extensionConfig.transmissionSpeedMarginType == "man-herd") { //manual herding
           lowerSpeed = (topSpeed - extensionConfig.transmissionSpeedMargin) * 2 + extensionConfig.transmissionSpeedMargin;
         } else if (extensionConfig.transmissionSpeedMarginType == "man-herd-5") { //manual herding x5

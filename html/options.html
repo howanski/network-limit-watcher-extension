@@ -70,6 +70,7 @@
             <option value="percent">%</option>
             <option value="kbps">kB/s</option>
             <option value="ave-herd">average herding</option>
+            <option value="niggard-herd">skinflint herding</option>
             <option value="man-herd">manual herding</option>
             <option value="man-herd-5">manual herding x5</option>
           </select>
@@ -137,8 +138,9 @@
     2.3 <b>average herding</b> : alt speed = (effective speed - month's average speed) * [input] + month's average
     speed<br>
     [> Side note: input values from 2 to 5 seem sane, extreme settings will be ignored<br>
-    2.4 <b>manual herding</b> : alt speed = (effective speed - [input]) * 2 + [input]<br>
-    2.5 <b>manual herding x5</b> : alt speed = (effective speed - [input]) * 5 + [input] // - just more aggresive
+    2.4 <b>skinflint herding</b> : like above, but effective speed is never greater than month's average and alt speed is never greater than effective speed<br>
+    2.5 <b>manual herding</b> : alt speed = (effective speed - [input]) * 2 + [input]<br>
+    2.6 <b>manual herding x5</b> : alt speed = (effective speed - [input]) * 5 + [input] // - just more aggresive
     version of previous algo<br><br>
     Herding algoritms are made to setup alt speed, so effective speed will reach given value in measurable time.
     <br><br>

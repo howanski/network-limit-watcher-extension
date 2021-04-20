@@ -23,6 +23,9 @@
             );
             adjustTransmissionDownloadSpeedIfChanged(topSpeed, lowerSpeed);
             return null;
+          } else if (response.status == 200) { //ok, cache last update parameters
+            previousIterationSpeed = topSpeed;
+            previousIterationAltSpeed = lowerSpeed;
           }
         }
       };
@@ -61,8 +64,6 @@
       };
       httpRequest.send(JSON.stringify(message));
 
-      previousIterationSpeed = topSpeed;
-      previousIterationAltSpeed = lowerSpeed;
     }
   }
 
@@ -97,11 +98,11 @@
           } else if (agression > 5) {
             agression = 5;
           }
-          if (topSpeed > data.normalMonthlyTransfer){
+          if (topSpeed > data.normalMonthlyTransfer) {
             topSpeed = data.normalMonthlyTransfer;
           }
           lowerSpeed = (topSpeed - data.normalMonthlyTransfer) * agression + data.normalMonthlyTransfer;
-          if (lowerSpeed > topSpeed){
+          if (lowerSpeed > topSpeed) {
             lowerSpeed = topSpeed;
           }
         } else if (extensionConfig.transmissionSpeedMarginType == "man-herd") { //manual herding

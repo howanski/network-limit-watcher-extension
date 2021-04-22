@@ -59,6 +59,16 @@
         parseInt(mainInfo.steadyTransferToEndOfMonthInKbps) + " kB/s";
     }
 
+    let currentAltSpeedIndicator = document.getElementById("current-alt-speed");
+    if (extensionConfig.restrictTorrentSpeed) {
+      currentAltSpeedIndicator.innerHTML = "TODO kBps";
+    } else {
+      currentAltSpeedIndicator.innerHTML = "N/A";
+    }
+
+    console.log(mainInfo);
+    console.log(extensionConfig);
+
     let normalMonthlyTransferElem = document.getElementById("normal-monthly-transfer");
     normalMonthlyTransferElem.innerHTML = parseInt(mainInfo.normalMonthlyTransfer) + " kB/s";
 
@@ -109,9 +119,15 @@
     updatepopUpInterface();
   }
 
-  function loadDataAndConfigAndShow(dataSavedInLocalStorage) {
+  function loadDataAndStatusAndConfigAndShow(dataSavedInLocalStorage) {
     mainInfo = dataSavedInLocalStorage.data;
-    browser.storage.local.get("config").then(loadConfigAndShow);
+    function loadTransmissionStatusAndConfigAndShow(transmissionStatus) {
+
+      console.log(transmissionStatus);
+      // TODO: save current alt speed, show it on interface
+      browser.storage.local.get("config").then(loadConfigAndShow);
+    }
+    browser.storage.local.get("transmissionStatus").then(loadTransmissionStatusAndConfigAndShow);
   }
 
   function openSettings() {
@@ -121,5 +137,5 @@
   let optionsBtn = document.getElementById("options-opener");
   optionsBtn.addEventListener("click", openSettings);
 
-  browser.storage.local.get("data").then(loadDataAndConfigAndShow);
+  browser.storage.local.get("data").then(loadDataAndStatusAndConfigAndShow);
 })();

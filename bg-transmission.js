@@ -27,6 +27,13 @@
             previousIterationSpeed = topSpeed;
             previousIterationAltSpeed = lowerSpeed;
           }
+          let transmissionStatus = {
+            normalSpeed: topSpeed,
+            altSpeed: lowerSpeed,
+            status: response.status,
+            statusText: response.statusText
+          };
+          browser.storage.local.set({ transmissionStatus: transmissionStatus });
         }
       };
 

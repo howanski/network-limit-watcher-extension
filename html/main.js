@@ -14,6 +14,8 @@
 
   let extensionConfig = {};
 
+  let readOnlyTransmissionStatus = {};
+
   function bytesToGigaBytes(bytes) {
     return (bytes / (1024 * 1024 * 1024)).toFixed(2);
   }
@@ -57,6 +59,17 @@
     } else {
       steadyTransferAdvise.innerHTML =
         parseInt(mainInfo.steadyTransferToEndOfMonthInKbps) + " kB/s";
+    }
+
+    let currentAltSpeedIndicator = document.getElementById("current-alt-speed");
+    if (extensionConfig.restrictTorrentSpeed) {
+      if (readOnlyTransmissionStatus.status == 200) {
+        currentAltSpeedIndicator.innerHTML = readOnlyTransmissionStatus.altSpeed + " kB/s";
+      } else {
+        currentAltSpeedIndicator.innerHTML = "ERR";
+      }
+    } else {
+      currentAltSpeedIndicator.innerHTML = "Off";
     }
 
     let normalMonthlyTransferElem = document.getElementById("normal-monthly-transfer");
@@ -109,9 +122,13 @@
     updatepopUpInterface();
   }
 
-  function loadDataAndConfigAndShow(dataSavedInLocalStorage) {
+  function loadDataAndStatusAndConfigAndShow(dataSavedInLocalStorage) {
     mainInfo = dataSavedInLocalStorage.data;
-    browser.storage.local.get("config").then(loadConfigAndShow);
+    function loadTransmissionStatusAndConfigAndShow(transmissionStatus) {
+      readOnlyTransmissionStatus = transmissionStatus.transmissionStatus;
+      browser.storage.local.get("config").then(loadConfigAndShow);
+    }
+    browser.storage.local.get("transmissionStatus").then(loadTransmissionStatusAndConfigAndShow);
   }
 
   function openSettings() {
@@ -121,5 +138,5 @@
   let optionsBtn = document.getElementById("options-opener");
   optionsBtn.addEventListener("click", openSettings);
 
-  browser.storage.local.get("data").then(loadDataAndConfigAndShow);
+  browser.storage.local.get("data").then(loadDataAndStatusAndConfigAndShow);
 })();

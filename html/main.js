@@ -14,6 +14,8 @@
 
   let extensionConfig = {};
 
+  let readOnlyTransmissionStatus = {};
+
   function bytesToGigaBytes(bytes) {
     return (bytes / (1024 * 1024 * 1024)).toFixed(2);
   }
@@ -61,13 +63,14 @@
 
     let currentAltSpeedIndicator = document.getElementById("current-alt-speed");
     if (extensionConfig.restrictTorrentSpeed) {
-      currentAltSpeedIndicator.innerHTML = "TODO kBps";
+      if (readOnlyTransmissionStatus.status == 200) {
+        currentAltSpeedIndicator.innerHTML = readOnlyTransmissionStatus.altSpeed + " kB/s";
+      } else {
+        currentAltSpeedIndicator.innerHTML = "ERR";
+      }
     } else {
-      currentAltSpeedIndicator.innerHTML = "N/A";
+      currentAltSpeedIndicator.innerHTML = "Off";
     }
-
-    console.log(mainInfo);
-    console.log(extensionConfig);
 
     let normalMonthlyTransferElem = document.getElementById("normal-monthly-transfer");
     normalMonthlyTransferElem.innerHTML = parseInt(mainInfo.normalMonthlyTransfer) + " kB/s";
@@ -122,9 +125,7 @@
   function loadDataAndStatusAndConfigAndShow(dataSavedInLocalStorage) {
     mainInfo = dataSavedInLocalStorage.data;
     function loadTransmissionStatusAndConfigAndShow(transmissionStatus) {
-
-      console.log(transmissionStatus);
-      // TODO: save current alt speed, show it on interface
+      readOnlyTransmissionStatus = transmissionStatus.transmissionStatus;
       browser.storage.local.get("config").then(loadConfigAndShow);
     }
     browser.storage.local.get("transmissionStatus").then(loadTransmissionStatusAndConfigAndShow);

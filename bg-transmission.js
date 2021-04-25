@@ -94,16 +94,16 @@
           let agression = extensionConfig.transmissionSpeedMargin;
           if (agression < 2) {
             agression = 2;
-          } else if (agression > 10) {
-            agression = 10;
+          } else if (agression > 15) {
+            agression = 15;
           }
           lowerSpeed = (topSpeed - data.normalMonthlyTransfer) * agression + data.normalMonthlyTransfer;
         } else if (extensionConfig.transmissionSpeedMarginType == "niggard-herd") { //skinflint herding
           let agression = extensionConfig.transmissionSpeedMargin;
           if (agression < 2) {
             agression = 2;
-          } else if (agression > 10) {
-            agression = 10;
+          } else if (agression > 15) {
+            agression = 15;
           }
           if (topSpeed > data.normalMonthlyTransfer) {
             topSpeed = data.normalMonthlyTransfer;

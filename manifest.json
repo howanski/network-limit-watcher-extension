@@ -11,11 +11,7 @@
     "96": "icons/base_icon.svg"
   },
 
-  "permissions": [
-    "*://192.168.1.1/*",
-    "storage",
-    "http://transmission-host/*"
-  ],
+  "permissions": ["*://192.168.1.1/*", "storage", "http://transmission-host/*"],
 
   "browser_action": {
     "default_icon": "icons/base_icon.svg",
@@ -29,5 +25,11 @@
 
   "background": {
     "scripts": ["bg-worker.js", "bg-transmission.js"]
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "network-limit-watcher@howanski.github.io"
+    }
   }
 }

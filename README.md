@@ -19,3 +19,9 @@ Future features:
 - Dynamic icon
 - Current transfer rates
 - Multilang support
+
+Installation:
+For test/debug pyrposes install from "about:debugging#/runtime/this-firefox"
+
+Build:
+Linux -> ./build will generate .xpi file

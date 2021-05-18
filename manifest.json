@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Network Limit Watcher",
-  "version": "21.425.1",
+  "version": "21.518.0",
   "description": "Shows how much data limit left",
   "homepage_url": "https://github.com/howanski/network-limit-watcher-extension",
   "icons": {

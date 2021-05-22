@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Network Limit Watcher",
   "version": "21.518.0",
-  "description": "Shows how much data limit left",
+  "description": "Shows how much data limit left to use in tarrifed network",
   "homepage_url": "https://github.com/howanski/network-limit-watcher-extension",
   "icons": {
     "32": "icons/base_icon.svg",
@@ -28,8 +28,7 @@
 
   "browser_specific_settings": {
     "gecko": {
-      "id": "network-limit-watcher@howanski.github.io",
-      "version": "42.0"
+      "id": "network-limit-watcher@howanski.github.io"
     }
   }
 }
